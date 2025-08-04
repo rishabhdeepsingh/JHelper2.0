@@ -9,7 +9,13 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.rishabhdeepsingh.jhelper20.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.rishabhdeepsingh.jhelper20.startup.MyProjectActivity" />
+<!--        <toolWindow factoryClass="com.github.rishabhdeepsingh.jhelper20.toolWindow.MyToolWindowFactory"-->
+<!--                    id="MyToolWindow"/>-->
+<!--        <postStartupActivity implementation="com.github.rishabhdeepsingh.jhelper20.startup.MyProjectActivity"/>-->
+        <applicationService
+                serviceImplementation="com.github.rishabhdeepsingh.jhelper20.components.ProjectConfigurationState"/>
+        <backgroundPostStartupActivity
+                implementation="com.github.rishabhdeepsingh.jhelper20.components.ProjectOpenStartupActivity"/>
+
     </extensions>
 </idea-plugin>

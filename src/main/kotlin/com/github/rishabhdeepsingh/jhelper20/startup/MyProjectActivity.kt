@@ -8,5 +8,7 @@ class MyProjectActivity : ProjectActivity {
 
     override suspend fun execute(project: Project) {
         thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
+        // Start the server
     }
+
 }
