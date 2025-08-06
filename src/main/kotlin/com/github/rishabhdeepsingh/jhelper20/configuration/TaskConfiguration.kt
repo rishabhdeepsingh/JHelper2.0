@@ -8,6 +8,7 @@ import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.TaskSettingsComponent
 import com.intellij.execution.ExecutionTarget
 import com.intellij.execution.Executor
+import com.intellij.execution.configuration.EmptyRunProfileState
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunConfigurationBase
@@ -62,7 +63,7 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
         output = readStreamConfiguration(element, "outputPath", "outputFile")
         testType = try {
             TestType.valueOf(element.getAttributeValue("testType", "SINGLE"))
-        } catch (ignored: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             TestType.SINGLE
         }
 
@@ -137,9 +138,10 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
     override fun checkConfiguration() {}
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
+        return EmptyRunProfileState.INSTANCE
 //      RunConfiguration configuration = TaskRunner.getRunnerSettings(getProject()).getConfiguration();
 //		return new CidrCommandLineState(environment, new CMakeLauncher(environment, (CMakeAppRunConfiguration)configuration));
-        throw RuntimeException("This method is not expected to be used")
+//        throw RuntimeException("This method is not expected to be used")
     }
 
     fun setFromTaskData(data: TaskData) {
@@ -161,7 +163,7 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
             val inputType: StreamType
             try {
                 inputType = StreamType.valueOf(element.getAttribute(typeAttribute).value)
-            } catch (ignored: RuntimeException) {
+            } catch (_: RuntimeException) {
                 return StreamConfiguration.STANDARD
             }
             return if (inputType.hasStringParameter) {

@@ -1,6 +1,8 @@
 package com.github.rishabhdeepsingh.jhelper20.components
 
 import com.github.rishabhdeepsingh.jhelper20.common.currentProject
+import com.github.rishabhdeepsingh.jhelper20.common.toClassName
+import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.network.SimpleHttpServer
 import com.github.rishabhdeepsingh.jhelper20.parser.CompetitiveCompanion
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
@@ -9,7 +11,6 @@ import com.github.rishabhdeepsingh.jhelper20.task.TaskUtils
 import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.Utils
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.vfs.VirtualFile
 import java.net.InetSocketAddress
 
 /**
@@ -25,6 +26,9 @@ class ChromeParserService {
             InetSocketAddress("localhost", PORT)
         ) { request: String ->
             val task = parser.parseJsonTask(request.substringAfter("json"))
+            if (task == null || task.name.isEmpty()) {
+                throw NotificationException("Invalid Task name!")
+            }
 
             println("Tasks: $task")
 
@@ -32,16 +36,16 @@ class ChromeParserService {
 
             val generatedFile = TaskUtils.saveNewTask(
                 TaskData(
-                    task?.name ?: "",
-                    task?.name ?: "",
-                    String.format("%s.cpp", task?.name ?: ""),
+                    task.name,
+                    task.name.toClassName(),
+                    cppPath = task.name.toClassName() + ".cpp",
                     StreamConfiguration.STANDARD,
                     StreamConfiguration.STANDARD,
                     TestType.SINGLE,
-                    task?.tests ?: emptyList()
+                    task.tests
                 ), currentProject()
             )
-            Utils.openMethodInEditor(currentProject(), generatedFile as VirtualFile)
+            Utils.openMethodInEditor(currentProject(), generatedFile)
         }
 
         Thread(server, "ChromeParserThread").start()

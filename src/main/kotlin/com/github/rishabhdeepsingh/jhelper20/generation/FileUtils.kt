@@ -29,8 +29,7 @@ object FileUtils {
     fun findOrCreateByRelativePath(root: VirtualFile, localPath: String): VirtualFile {
         return ApplicationManager.getApplication().runWriteAction(object : Computable<VirtualFile> {
             override fun compute(): VirtualFile {
-                var path = localPath
-                path = StringUtil.trimStart(path, "/")
+                val path = StringUtil.trimStart(localPath, "/")
                 if (path.isEmpty()) {
                     return root
                 }

@@ -12,11 +12,9 @@ import com.intellij.util.xmlb.XmlSerializerUtil
     storages = [Storage("JHelper.xml")]
 )
 class ProjectConfigurationState : PersistentStateComponent<ProjectConfigurationState> {
-    var archiveDirectory = "archive"
     var tasksDirectory = "tasks"
     var outputFile = "output/main.cpp"
     var runFile = "testrunner/main.cpp"
-    var isCodeEliminationOn = false
     var isCodeReformattingOn = false
 
     override fun getState(): ProjectConfigurationState {
@@ -28,7 +26,7 @@ class ProjectConfigurationState : PersistentStateComponent<ProjectConfigurationS
     }
 
     companion object {
-        fun getInstance(): ProjectConfigurationState? =
+        fun getInstance(): ProjectConfigurationState =
             ApplicationManager.getApplication().getService(ProjectConfigurationState::class.java)
     }
 }

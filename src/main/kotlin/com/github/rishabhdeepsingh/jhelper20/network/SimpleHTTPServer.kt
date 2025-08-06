@@ -9,6 +9,7 @@ import com.intellij.util.Consumer
 import java.io.IOException
 import java.net.ServerSocket
 import java.net.SocketAddress
+import kotlin.text.toRegex
 
 /**
  * Simple HTTP Server.

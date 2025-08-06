@@ -63,7 +63,7 @@ object TemplatesUtils {
     }
 
     /**
-     * Returns content of resource file (from resource folder) as a string.
+     * Returns content of a resource file (from resource folder) as a string.
      */
     @Throws(IOException::class)
     private fun getResourceContent(filePath: String): String {
