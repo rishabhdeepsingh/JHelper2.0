@@ -12,7 +12,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
     storages = [Storage("JHelper.xml")]
 )
 class ProjectConfigurationState : PersistentStateComponent<ProjectConfigurationState> {
-    var tasksDirectory = "tasks"
+    val tasksDirectory = "tasks"
     var outputFile = "output/main.cpp"
     var runFile = "testrunner/main.cpp"
     var isCodeReformattingOn = false
