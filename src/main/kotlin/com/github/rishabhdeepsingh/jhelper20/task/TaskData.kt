@@ -1,6 +1,6 @@
 package com.github.rishabhdeepsingh.jhelper20.task
 
-import com.github.rishabhdeepsingh.jhelper20.components.ProjectConfigurationState
+import com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState
 
 data class TaskData(
     val name: String,

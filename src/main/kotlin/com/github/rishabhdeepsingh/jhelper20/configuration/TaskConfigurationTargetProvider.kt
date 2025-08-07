@@ -14,7 +14,7 @@ class TaskConfigurationTargetProvider : ExecutionTargetProvider() {
         if (configuration !is TaskConfiguration) {
             return emptyList()
         }
-        val testRunner = TaskRunner.getRunnerSettings(project) ?: return emptyList()
+        val testRunner = getRunnerSettings(project) ?: return emptyList()
         return ExecutionTargetManager.getInstance(project).getTargetsFor(testRunner.configuration)
             .mapNotNull { target ->
                 TaskConfigurationExecutionTarget(target)

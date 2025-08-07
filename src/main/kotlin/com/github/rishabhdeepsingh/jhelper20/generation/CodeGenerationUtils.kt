@@ -2,7 +2,7 @@ package com.github.rishabhdeepsingh.jhelper20.generation
 
 import com.github.rishabhdeepsingh.jhelper20.common.CommonUtils.generatePSIFromTask
 import com.github.rishabhdeepsingh.jhelper20.common.firstRootSource
-import com.github.rishabhdeepsingh.jhelper20.components.ProjectConfigurationState
+import com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState
 import com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfiguration
 import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.generation.TemplatesUtils.getTemplate

@@ -61,20 +61,20 @@ class TaskRunner : ProgramRunner<RunnerSettings?> {
 
 
     companion object {
-        private const val RUN_CONFIGURATION_NAME = "testrunner"
-
-        fun getRunnerSettings(project: Project): RunnerAndConfigurationSettings? {
-            return getSettingsByName(project)
-        }
-
-        private fun getSettingsByName(project: Project): RunnerAndConfigurationSettings? =
-            RunManager.getInstance(project).allSettings.find {
-                it.name == RUN_CONFIGURATION_NAME
-            }
-
-        private fun generateRunFileForTask(project: Project, taskConfiguration: TaskConfiguration) {
-            val psiFile = generatePSIFromTask(project, taskConfiguration)
-            CodeGenerationUtils.generateRunFile(project, psiFile, taskConfiguration)
-        }
+        const val RUN_CONFIGURATION_NAME = "testrunner"
     }
+}
+
+fun getRunnerSettings(project: Project): RunnerAndConfigurationSettings? {
+    return getSettingsByName(project)
+}
+
+private fun getSettingsByName(project: Project): RunnerAndConfigurationSettings? =
+    RunManager.getInstance(project).allSettings.find {
+        it.name == TaskRunner.RUN_CONFIGURATION_NAME
+    }
+
+private fun generateRunFileForTask(project: Project, taskConfiguration: TaskConfiguration) {
+    val psiFile = generatePSIFromTask(project, taskConfiguration)
+    CodeGenerationUtils.generateRunFile(project, psiFile, taskConfiguration)
 }
