@@ -9,16 +9,19 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!--        <toolWindow factoryClass="com.github.rishabhdeepsingh.jhelper20.toolWindow.MyToolWindowFactory"-->
-        <!--                    id="MyToolWindow"/>-->
-        <!--        <postStartupActivity implementation="com.github.rishabhdeepsingh.jhelper20.startup.MyProjectActivity"/>-->
+        <configurationType implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfigurationType"/>
+        <programRunner implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskRunner"/>
+        <toolWindow factoryClass="com.github.rishabhdeepsingh.jhelper20.toolWindow.JHelperWindowFactory"
+                    id="JHelperToolWindow"/>
         <applicationService
-                serviceImplementation="com.github.rishabhdeepsingh.jhelper20.components.ProjectConfigurationState"/>
+                serviceImplementation="com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState"/>
         <backgroundPostStartupActivity
-                implementation="com.github.rishabhdeepsingh.jhelper20.components.ProjectOpenStartupActivity"/>
+                implementation="com.github.rishabhdeepsingh.jhelper20.startup.ProjectOpenStartupActivity"/>
         <executionTargetProvider
                 implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfigurationTargetProvider"/>
-        <programRunner implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskRunner"/>
-
     </extensions>
+    <applicationListeners>
+        <listener topic="com.intellij.openapi.project.ProjectManagerListener"
+                  class="com.github.rishabhdeepsingh.jhelper20.listeners.ProjectCloseListener"/>
+    </applicationListeners>
 </idea-plugin>

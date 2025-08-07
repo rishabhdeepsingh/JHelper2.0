@@ -27,4 +27,4 @@ fun currentProject(): Project = ProjectManager.getInstance().openProjects[0]
 fun String.appendIfAbsent(suffix: String): String = if (this.endsWith(suffix)) this else this + suffix
 
 
-fun String.toClassName() = this.replace(".", "").replace(" ", "")
+fun String.toClassName() = this.replace(Regex("[^a-zA-Z0-9]"), "")

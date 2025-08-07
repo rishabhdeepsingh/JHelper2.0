@@ -2,7 +2,7 @@ package com.github.rishabhdeepsingh.jhelper20.generation
 
 import com.github.rishabhdeepsingh.jhelper20.common.CommonUtils.generatePSIFromTask
 import com.github.rishabhdeepsingh.jhelper20.common.firstRootSource
-import com.github.rishabhdeepsingh.jhelper20.components.ProjectConfigurationState
+import com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState
 import com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfiguration
 import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.generation.TemplatesUtils.getTemplate
@@ -100,7 +100,7 @@ object CodeGenerationUtils {
 
     /**
      * Generates code for submission.
-     * Adds main function, inlines all used code except standard library and puts it to output file from configuration
+     * Adds the main function, inlines all used code except the standard library and puts it to an output file from configuration
      *
      * @param project Project to get configuration from
      */
@@ -112,12 +112,11 @@ object CodeGenerationUtils {
         if (FileUtils.isNotCppFile(inputFile)) {
             throw NotificationException("Not a cpp file", "Only cpp files are currently supported")
         }
-//    TODO: Find a way to resolve the includes.
-//        val result = IncludesProcessor.process(inputFile)
+        val result = IncludesProcessor.process(inputFile)
         val psiOutputFile = getOutputFile(project)
 
         FileUtils.writeToFile(
-            psiOutputFile, generateSubmissionFileContent(project, inputFile.text, task)
+            psiOutputFile, generateSubmissionFileContent(project, result, task)
         )
         if (ProjectConfigurationState.getInstance().isCodeReformattingOn) {
             ReformatCodeProcessor(psiOutputFile, false).run()
