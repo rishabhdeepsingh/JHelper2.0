@@ -1,13 +1,13 @@
-package com.github.rishabhdeepsingh.jhelper20.components
+package com.github.rishabhdeepsingh.jhelper20.services
 
 import com.github.rishabhdeepsingh.jhelper20.common.currentProject
 import com.github.rishabhdeepsingh.jhelper20.common.toClassName
+import com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState
 import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.network.SimpleHttpServer
 import com.github.rishabhdeepsingh.jhelper20.parser.CompetitiveCompanion
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
-import com.github.rishabhdeepsingh.jhelper20.task.TaskData.Companion.defaultCppPathFormat
 import com.github.rishabhdeepsingh.jhelper20.task.TaskUtils
 import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.Utils
@@ -33,13 +33,13 @@ class ChromeParserService {
 
             println("Tasks: $task")
 
-            println("Task Directory: ${ProjectConfigurationState.getInstance()?.tasksDirectory}")
+            println("Task Directory: ${ProjectConfigurationState.getInstance().tasksDirectory}")
 
             val generatedFile = TaskUtils.saveNewTask(
                 TaskData(
                     task.name,
                     task.name.toClassName(),
-                    cppPath = defaultCppPathFormat().format(task.name.toClassName()),
+                    cppPath = TaskData.defaultCppPathFormat().format(task.name.toClassName()),
                     StreamConfiguration.STANDARD,
                     StreamConfiguration.STANDARD,
                     TestType.SINGLE,
