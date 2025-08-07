@@ -21,6 +21,6 @@ data class TaskData(
             TestType.SINGLE, listOf()
         )
 
-        fun defaultCppPathFormat() = "${ProjectConfigurationState.getInstance()!!.state.tasksDirectory}/%s.cpp"
+        fun defaultCppPathFormat() = "${ProjectConfigurationState.getInstance().state.tasksDirectory}/%s.cpp"
     }
 }

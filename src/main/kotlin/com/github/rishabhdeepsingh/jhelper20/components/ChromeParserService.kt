@@ -7,6 +7,7 @@ import com.github.rishabhdeepsingh.jhelper20.network.SimpleHttpServer
 import com.github.rishabhdeepsingh.jhelper20.parser.CompetitiveCompanion
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
+import com.github.rishabhdeepsingh.jhelper20.task.TaskData.Companion.defaultCppPathFormat
 import com.github.rishabhdeepsingh.jhelper20.task.TaskUtils
 import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.Utils
@@ -38,7 +39,7 @@ class ChromeParserService {
                 TaskData(
                     task.name,
                     task.name.toClassName(),
-                    cppPath = task.name.toClassName() + ".cpp",
+                    cppPath = defaultCppPathFormat().format(task.name.toClassName()),
                     StreamConfiguration.STANDARD,
                     StreamConfiguration.STANDARD,
                     TestType.SINGLE,
