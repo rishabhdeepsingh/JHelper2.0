@@ -6,10 +6,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 
 
-inline fun <reified E : Enum<E>> String?.toEnumOrDefault(default: E): E =
-    runCatching { if (this != null) enumValueOf<E>(this) else default }
-        .getOrElse { default }
-
 /**
  * Returns the first source root of the project.
  */

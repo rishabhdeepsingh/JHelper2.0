@@ -1,6 +1,5 @@
 package com.github.rishabhdeepsingh.jhelper20.configuration
 
-import com.github.rishabhdeepsingh.jhelper20.common.toEnumOrDefault
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.StreamType
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
