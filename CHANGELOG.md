@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [2025.8.10] - 2025-08-09
+
+- Code cleanup
+- Single tasks
+- Ability to add or remove testcases.
+
 ## [2025.8.9] - 2025-08-09
 
 ### Added
@@ -21,7 +27,9 @@
 - Initial scaffold created
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/rishabhdeepsingh/JHelper2.0/compare/v2025.08.09...HEAD
+[Unreleased]: https://github.com/rishabhdeepsingh/JHelper2.0/compare/v2025.08.10...HEAD
+
+[2025.8.9]: https://github.com/rishabhdeepsingh/JHelper2.0/commits/v2025.8.10
 
 [2025.8.9]: https://github.com/rishabhdeepsingh/JHelper2.0/commits/v2025.8.9
 
