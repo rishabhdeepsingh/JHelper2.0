@@ -2,7 +2,6 @@ package com.github.rishabhdeepsingh.jhelper20.services
 
 import com.github.rishabhdeepsingh.jhelper20.common.currentProject
 import com.github.rishabhdeepsingh.jhelper20.common.toClassName
-import com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState
 import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.network.SimpleHttpServer
 import com.github.rishabhdeepsingh.jhelper20.parser.CompetitiveCompanion
@@ -22,7 +21,6 @@ class ChromeParserService {
     private lateinit var server: SimpleHttpServer
 
     fun startHttpServer() {
-        println("Starting ChromeParserService")
         server = SimpleHttpServer(
             InetSocketAddress("localhost", PORT)
         ) { request: String ->
@@ -30,10 +28,6 @@ class ChromeParserService {
             if (task == null || task.name.isEmpty()) {
                 throw NotificationException("Invalid Task name!")
             }
-
-            println("Tasks: $task")
-
-            println("Task Directory: ${ProjectConfigurationState.getInstance().tasksDirectory}")
 
             val generatedFile = TaskUtils.saveNewTask(
                 TaskData(
