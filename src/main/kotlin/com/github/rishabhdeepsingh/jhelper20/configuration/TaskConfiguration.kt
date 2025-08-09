@@ -1,5 +1,6 @@
 package com.github.rishabhdeepsingh.jhelper20.configuration
 
+import com.github.rishabhdeepsingh.jhelper20.common.toEnumOrDefault
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.StreamType
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
@@ -19,27 +20,27 @@ import com.intellij.openapi.project.Project
 import org.jdom.Element
 import javax.swing.JComponent
 
-class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
-    RunConfigurationBase<Any>(project!!, factory, "") {
+private const val ATTR_CLASS_NAME = "className"
+private const val ATTR_CPP_PATH = "cppPath"
+private const val ATTR_INPUT_TYPE = "inputType"
+private const val ATTR_OUTPUT_TYPE = "outputType"
+private const val ATTR_INPUT_FILE = "inputFile"
+private const val ATTR_OUTPUT_FILE = "outputFile"
+
+class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
+    RunConfigurationBase<Any>(project, factory, "") {
 
     var className: String = ""
         private set
     var cppPath: String = ""
         private set
-    var input: StreamConfiguration
+    var input: StreamConfiguration = StreamConfiguration(StreamType.STANDARD)
         private set
-    var output: StreamConfiguration
+    var output: StreamConfiguration = StreamConfiguration(StreamType.STANDARD)
         private set
-    var testType: TestType
+    var testType: TestType = TestType.SINGLE
         private set
-    var tests: List<Test>
-
-    init {
-        input = StreamConfiguration(StreamType.STANDARD)
-        output = StreamConfiguration(StreamType.STANDARD)
-        testType = TestType.SINGLE
-        tests = listOf()
-    }
+    var tests: List<Test> = listOf()
 
     override fun canRunOn(target: ExecutionTarget): Boolean {
         return target is TaskConfigurationExecutionTarget
@@ -56,45 +57,32 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
 
     override fun readExternal(element: Element) {
         super.readExternal(element)
-        className = element.getAttributeValue("className", "")
-        cppPath = element.getAttributeValue("cppPath", "")
-        input = readStreamConfiguration(element, "inputPath", "inputFile")
-        output = readStreamConfiguration(element, "outputPath", "outputFile")
-        testType = try {
-            TestType.valueOf(element.getAttributeValue("testType", "SINGLE"))
-        } catch (_: IllegalArgumentException) {
-            TestType.SINGLE
-        }
-
-        for (child in element.children) {
-            if (child.name == "tests") {
-                tests = List(child.children.size) {
-                    readTest(child.children[it])
-                }
-            }
-        }
+        className = element.getAttributeValue(ATTR_CLASS_NAME).orEmpty()
+        cppPath = element.getAttributeValue(ATTR_CPP_PATH).orEmpty()
+        input = readStreamConfiguration(element, "inputPath", ATTR_INPUT_FILE)
+        output = readStreamConfiguration(element, "outputPath", ATTR_OUTPUT_FILE)
+        testType = element.getAttributeValue("testType").toEnumOrDefault(TestType.SINGLE)
+        tests = element.getChild("tests")?.getChildren("test")?.map(::readTest).orEmpty()
     }
 
     override fun writeExternal(element: Element) {
-        element.setAttribute("className", className)
-        element.setAttribute("cppPath", cppPath)
-        element.setAttribute("inputType", input.type!!.name)
-        if (input.fileName != null) {
-            element.setAttribute("inputFile", input.fileName)
-        }
-        element.setAttribute("outputType", output.type!!.name)
-        if (output.fileName != null) {
-            element.setAttribute("outputFile", output.fileName)
-        }
+        element.setAttribute(ATTR_CLASS_NAME, className)
+        element.setAttribute(ATTR_CPP_PATH, cppPath)
+        element.setAttribute(ATTR_INPUT_TYPE, input.type!!.name)
+        input.fileName?.let { element.setAttribute(ATTR_INPUT_FILE, it) }
+        element.setAttribute(ATTR_OUTPUT_TYPE, output.type!!.name)
+        output.fileName?.let { element.setAttribute(ATTR_OUTPUT_FILE, it) }
         element.setAttribute("testType", testType.name)
 
-        val testsElements = Element("tests")
-        for (test in tests) {
-            val testElement = Element("test")
-            testElement.setAttribute("input", test.input)
-            testElement.setAttribute("output", test.output)
-            testElement.setAttribute("active", test.active.toString())
-            testsElements.addContent(testElement)
+        val testsElements = Element("tests").apply {
+            for (test in tests) {
+                val testElement = Element("test").apply {
+                    setAttribute("input", test.input)
+                    setAttribute("output", test.output)
+                    setAttribute("active", test.active.toString())
+                }
+                addContent(testElement)
+            }
         }
         element.addContent(testsElements)
 
@@ -120,6 +108,7 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
                 settings.input = data.input
                 settings.output = data.output
                 settings.testType = data.testType
+                settings.tests = data.tests.toList()
             }
 
             override fun createEditor(): JComponent {
@@ -132,9 +121,6 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
         return EmptyRunProfileState.INSTANCE
-//      RunConfiguration configuration = TaskRunner.getRunnerSettings(getProject()).getConfiguration();
-//		return new CidrCommandLineState(environment, new CMakeLauncher(environment, (CMakeAppRunConfiguration)configuration));
-//        throw RuntimeException("This method is not expected to be used")
     }
 
     fun setFromTaskData(data: TaskData) {
@@ -168,9 +154,9 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
 
         private fun readTest(element: Element): Test {
             assert(element.name == "test")
-            val input = element.getAttributeValue("input")
-            val output = element.getAttributeValue("output")
-            val active = element.getAttributeValue("active") == "true"
+            val input = element.getAttributeValue("input").orEmpty()
+            val output = element.getAttributeValue("output").orEmpty()
+            val active = element.getAttributeValue("active").toBooleanStrictOrNull() ?: false
             return Test(input, output, active)
         }
     }

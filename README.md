@@ -13,13 +13,12 @@ Features:
 - [x] Copy sources to clipboard.
 - [x] Delete a Task.
 - [x] Configure tasks (i.e. update input and output)
-- [x] Add a Testcase.
+- [x] Add or Delete a Testcase.
 
 ### Pending Features:
 
-- [ ] Delete a testcase (Right now you can marka a test case as inactive).
 - [ ] Archive a task.
-
+- [ ] Configure the plugin for settings. 
 <!-- Plugin description end -->
 
 ## Installation

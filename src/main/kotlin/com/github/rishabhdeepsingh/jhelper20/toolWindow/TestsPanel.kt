@@ -80,7 +80,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
             }
         })
 
-        // Change cursor to hand when hovering over checkbox area
+        // Change the cursor to hand when hovering over the checkbox area
         list.addMouseMotionListener(object : MouseMotionAdapter() {
             override fun mouseMoved(e: MouseEvent) {
                 val index = list.locationToIndex(e.point)
@@ -94,7 +94,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
             if (!it.valueIsAdjusting) loadSelectedIntoEditors()
         }
 
-        // Editors -> auto-save with debounce
+        // Editors -> auto-save with debouncing
         val docListener = object : DocumentListener {
             override fun insertUpdate(e: DocumentEvent) = scheduleCommit()
             override fun removeUpdate(e: DocumentEvent) = scheduleCommit()
