@@ -46,7 +46,7 @@ object CodeGenerationUtils {
     private fun generateTestDeclaration(tests: List<Test>): String = tests.joinToString { test ->
         """
             |{
-            | ${quote(test.input)}, ${quote(test.output)},
+            | ${quote(test.input)}, ${quote(test.output ?: "")},
             | ${test.active}, ${true}
             |}
             """.trimMargin()

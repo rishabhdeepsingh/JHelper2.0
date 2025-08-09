@@ -1,45 +1,97 @@
 package com.github.rishabhdeepsingh.jhelper20.toolWindow
 
+import com.github.rishabhdeepsingh.jhelper20.services.CopySourceService
+import com.github.rishabhdeepsingh.jhelper20.services.DeleteTaskService
+import com.github.rishabhdeepsingh.jhelper20.services.EditTestsService
+import com.github.rishabhdeepsingh.jhelper20.task.Test
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.components.service
+import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.LabeledComponent
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBPanel
+import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
-import com.github.rishabhdeepsingh.jhelper20.MyBundle
-import com.github.rishabhdeepsingh.jhelper20.services.CopySourceService
-import com.github.rishabhdeepsingh.jhelper20.services.DeleteTaskService
-import javax.swing.JButton
-import com.intellij.ui.JBColor
+import java.awt.BorderLayout
+import java.awt.Dimension
+import javax.swing.JComponent
 
-
-class JHelperWindowFactory : ToolWindowFactory {
+class JHelperWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val jHelperToolWindow = JHelperToolWindow(toolWindow)
-        val content = ContentFactory.getInstance().createContent(jHelperToolWindow.getContent(), null, false)
+
+        val content = ContentFactory.getInstance().createContent(jHelperToolWindow.getContent(), "JHelper", false)
+
+        // Dispose inner resources (TestsPanel) with the content
+        content.setDisposer(jHelperToolWindow)
         toolWindow.contentManager.addContent(content)
+
+        // Seed initial tests so the list is populated immediately
+        val service = project.service<EditTestsService>()
+        jHelperToolWindow.setInitialTests(service.tests)
     }
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class JHelperToolWindow(toolWindow: ToolWindow) {
+    class JHelperToolWindow(toolWindow: ToolWindow) : Disposable {
 
         private val copySourceService = toolWindow.project.service<CopySourceService>()
         private val deleteTaskService = toolWindow.project.service<DeleteTaskService>()
 
+        // Single TestsPanel instance used inside the main tab
+        private val testsPanel = TestsPanel(toolWindow.project)
 
-        fun getContent() = JBPanel<JBPanel<*>>().apply {
-            add(JButton(MyBundle.message("COPY_SOURCES")).apply {
-                background = JBColor.GREEN
-                font = font.deriveFont(16.0f)
-                addActionListener { copySourceService.copySource() }
-            })
+        fun getContent(): JComponent {
+            val toolbar =
+                ActionManager.getInstance().createActionToolbar(
+                    "JHelper.Toolbar",
+                    DefaultActionGroup(
+                        CopyAction { copySourceService.copySource() },
+                        DeleteAction { deleteTaskService.deleteTask() }),
+                    true // horizontal
+                )
 
-            add(JButton(MyBundle.message("DELETE_TASK")).apply {
-                background = JBColor.RED
-                addActionListener { deleteTaskService.deleteTask() }
-            })
+            // Center content: Tests list
+            val testsContent = LabeledComponent.create(
+                JBScrollPane(testsPanel), "Tests"
+            )
+            val root = JBPanel<JBPanel<*>>(BorderLayout()).apply {
+                add(toolbar.component, BorderLayout.NORTH)
+                add(testsContent, BorderLayout.CENTER)
+                preferredSize = Dimension(600, 400)
+            }
+            toolbar.targetComponent = root
+
+            Disposer.register(this, testsPanel)
+            return root
+        }
+
+        fun setInitialTests(tests: List<Test>) {
+            testsPanel.setInitialTests(tests)
+        }
+
+        override fun dispose() {
+            // testsPanel is disposed via Disposer.register
         }
     }
 }
+
+private class CopyAction(private val onCopy: () -> Unit) :
+    DumbAwareAction("Copy Sources", "Copy sources", AllIcons.Actions.Copy) {
+    override fun actionPerformed(e: AnActionEvent) = onCopy()
+}
+
+private class DeleteAction(private val onDelete: () -> Unit) :
+    DumbAwareAction("Delete Task", "Delete task", AllIcons.General.Remove) {
+    override fun actionPerformed(e: AnActionEvent) = onDelete()
+}
+

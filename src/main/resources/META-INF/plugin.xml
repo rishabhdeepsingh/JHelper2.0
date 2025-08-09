@@ -20,8 +20,12 @@
         <executionTargetProvider
                 implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfigurationTargetProvider"/>
     </extensions>
+    <projectListeners>
+        <listener class="com.github.rishabhdeepsingh.jhelper20.listeners.RunConfigurationChangeListener"
+                  topic="com.intellij.execution.RunManagerListener"/>
+    </projectListeners>
     <applicationListeners>
-        <listener topic="com.intellij.openapi.project.ProjectManagerListener"
-                  class="com.github.rishabhdeepsingh.jhelper20.listeners.ProjectCloseListener"/>
+        <listener class="com.github.rishabhdeepsingh.jhelper20.listeners.ProjectCloseListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>
