@@ -45,15 +45,14 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
         return target is TaskConfigurationExecutionTarget
     }
 
-    override fun clone(): TaskConfiguration =
-        (super.clone() as TaskConfiguration).also {
-            it.className = className
-            it.cppPath = cppPath
-            it.input = input
-            it.output = output
-            it.testType = testType
-            it.tests = tests
-        }
+    override fun clone(): TaskConfiguration = (super.clone() as TaskConfiguration).also {
+        it.className = className
+        it.cppPath = cppPath
+        it.input = input
+        it.output = output
+        it.testType = testType
+        it.tests = tests
+    }
 
     override fun readExternal(element: Element) {
         super.readExternal(element)
@@ -109,13 +108,7 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
             override fun resetEditorFrom(settings: TaskConfiguration) {
                 component.setTaskData(
                     TaskData(
-                        name,
-                        className,
-                        cppPath,
-                        input,
-                        output,
-                        testType,
-                        listOf()
+                        name, className, cppPath, input, output, testType, listOf()
                     )
                 )
             }
