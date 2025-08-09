@@ -9,6 +9,7 @@ import com.github.rishabhdeepsingh.jhelper20.generation.TemplatesUtils
 import com.github.rishabhdeepsingh.jhelper20.generation.TemplatesUtils.getTemplate
 import com.intellij.execution.RunManager
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
@@ -42,10 +43,12 @@ object TaskUtils {
         )
         val psiParent = PsiManager.getInstance(project).findDirectory(parent)
             ?: throw NotificationException("Couldn't open parent directory as PSI")
+
+        val fileName = FileUtils.getFilename(taskData.cppPath)
+        val fileType = FileTypeManager.getInstance().getFileTypeByFileName(fileName)
+
         val file = PsiFileFactory.getInstance(project).createFileFromText(
-            FileUtils.getFilename(taskData.cppPath),
-            PlainTextFileType.INSTANCE,
-            getTaskContent(project, taskData.className)
+            fileName, fileType, getTaskContent(project, taskData.className)
         )
         file.let { ApplicationManager.getApplication().runWriteAction(Computable { psiParent.add(it) }) }
             ?: throw NotificationException("Couldn't generate file")
