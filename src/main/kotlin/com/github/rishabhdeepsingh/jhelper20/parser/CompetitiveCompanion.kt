@@ -38,7 +38,7 @@ class CompetitiveCompanion : Parser {
             Task(
                 name = name, tests = tests, contestName = group
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
