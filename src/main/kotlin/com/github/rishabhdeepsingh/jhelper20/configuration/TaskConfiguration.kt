@@ -171,7 +171,7 @@ class TaskConfiguration(project: Project?, factory: ConfigurationFactory?) :
             val input = element.getAttributeValue("input")
             val output = element.getAttributeValue("output")
             val active = element.getAttributeValue("active") == "true"
-            return Test(input, output, 0, active)
+            return Test(input, output, active)
         }
     }
 }

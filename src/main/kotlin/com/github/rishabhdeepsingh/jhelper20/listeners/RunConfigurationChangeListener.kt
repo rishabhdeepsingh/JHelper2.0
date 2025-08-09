@@ -12,6 +12,5 @@ class RunConfigurationChangeListener(val project: Project) : RunManagerListener 
         val cfg = settings?.configuration as? TaskConfiguration ?: return
         val editTestsService = project.service<EditTestsService>()
         editTestsService.setTests(cfg.tests)
-        println(editTestsService.tests)
     }
 }

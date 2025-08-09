@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.OnePixelSplitter
+import com.intellij.ui.SimpleColoredComponent
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
@@ -162,7 +163,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
 
         // Optimistically update the visible row so preview updates immediately
         val current = listModel.getElementAt(idx)
-        val updated = Test(newInput, newOutput, current.index, current.active)
+        val updated = Test(newInput, newOutput, current.active)
         listModel.setElementAt(updated, idx)
         list.repaint()
 
@@ -189,7 +190,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
     private class TestWithCheckBoxRenderer : ListCellRenderer<Test> {
         private val panel = JPanel(BorderLayout())
         private val checkBox = JCheckBox()
-        private val text = com.intellij.ui.SimpleColoredComponent()
+        private val text = SimpleColoredComponent()
 
         init {
             panel.border = BorderFactory.createEmptyBorder(2, 4, 2, 4) // 4px left inset
