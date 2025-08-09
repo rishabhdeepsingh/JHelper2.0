@@ -16,8 +16,7 @@ import java.util.Collections
 class EditTestsService(val project: Project) {
 
     companion object {
-        val TOPIC: Topic<TestsChangedListener> =
-            Topic.create("JHelper Tests Changed", TestsChangedListener::class.java)
+        val TOPIC: Topic<TestsChangedListener> = Topic.create("JHelper Tests Changed", TestsChangedListener::class.java)
     }
 
     private val _tests: MutableList<Test> = mutableListOf()
@@ -48,6 +47,19 @@ class EditTestsService(val project: Project) {
         persistIntoSelectedTaskConfiguration()
         notifyTestsChanged()
     }
+
+    // New: mark all tests active/inactive in one go
+    fun toggleAll() {
+        val allActive = _tests.all { it.active }
+        val active = !allActive
+        for (i in _tests.indices) {
+            val t = _tests[i]
+            if (t.active != active) {
+                setActive(i, active)
+            }
+        }
+    }
+
 
     private fun persistIntoSelectedTaskConfiguration() {
         val runManager = RunManagerImpl.getInstanceImpl(project)

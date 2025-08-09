@@ -9,6 +9,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.Separator
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
@@ -46,19 +47,21 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
 
         private val copySourceService = toolWindow.project.service<CopySourceService>()
         private val deleteTaskService = toolWindow.project.service<DeleteTaskService>()
+        private val editTestsService = toolWindow.project.service<EditTestsService>()
 
         // Single TestsPanel instance used inside the main tab
         private val testsPanel = TestsPanel(toolWindow.project)
 
         fun getContent(): JComponent {
-            val toolbar =
-                ActionManager.getInstance().createActionToolbar(
-                    "JHelper.Toolbar",
-                    DefaultActionGroup(
-                        CopyAction { copySourceService.copySource() },
-                        DeleteAction { deleteTaskService.deleteTask() }),
-                    true // horizontal
-                )
+            val toolbar = ActionManager.getInstance().createActionToolbar(
+                "JHelper.Toolbar", DefaultActionGroup(
+                    CopyAction { copySourceService.copySource() },
+                    Separator.getInstance(),
+                    ToggleAllTestsAction { editTestsService.toggleAll() },
+                    Separator.getInstance(),
+                    DeleteAction { deleteTaskService.deleteTask() },
+                ), true // horizontal
+            )
 
             // Center content: Tests list
             val testsContent = LabeledComponent.create(
@@ -95,3 +98,7 @@ private class DeleteAction(private val onDelete: () -> Unit) :
     override fun actionPerformed(e: AnActionEvent) = onDelete()
 }
 
+private class ToggleAllTestsAction(private val onSelectAll: () -> Unit) :
+    DumbAwareAction("Toggle All", "Toggle all tests", AllIcons.General.TreeSelected) {
+    override fun actionPerformed(e: AnActionEvent) = onSelectAll()
+}
