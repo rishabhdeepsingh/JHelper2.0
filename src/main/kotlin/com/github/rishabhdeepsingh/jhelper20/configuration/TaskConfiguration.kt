@@ -5,7 +5,6 @@ import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.StreamType
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
 import com.github.rishabhdeepsingh.jhelper20.task.Test
-import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.TaskSettingsComponent
 import com.intellij.execution.ExecutionTarget
 import com.intellij.execution.Executor
@@ -38,8 +37,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
         private set
     var output: StreamConfiguration = StreamConfiguration(StreamType.STANDARD)
         private set
-    var testType: TestType = TestType.SINGLE
-        private set
     var tests: List<Test> = listOf()
 
     override fun canRunOn(target: ExecutionTarget): Boolean {
@@ -51,7 +48,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
         it.cppPath = cppPath
         it.input = input
         it.output = output
-        it.testType = testType
         it.tests = tests
     }
 
@@ -61,7 +57,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
         cppPath = element.getAttributeValue(ATTR_CPP_PATH).orEmpty()
         input = readStreamConfiguration(element, "inputPath", ATTR_INPUT_FILE)
         output = readStreamConfiguration(element, "outputPath", ATTR_OUTPUT_FILE)
-        testType = element.getAttributeValue("testType").toEnumOrDefault(TestType.SINGLE)
         tests = element.getChild("tests")?.getChildren("test")?.map(::readTest).orEmpty()
     }
 
@@ -72,7 +67,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
         input.fileName?.let { element.setAttribute(ATTR_INPUT_FILE, it) }
         element.setAttribute(ATTR_OUTPUT_TYPE, output.type!!.name)
         output.fileName?.let { element.setAttribute(ATTR_OUTPUT_FILE, it) }
-        element.setAttribute("testType", testType.name)
 
         val testsElements = Element("tests").apply {
             for (test in tests) {
@@ -96,7 +90,7 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
             override fun resetEditorFrom(settings: TaskConfiguration) {
                 component.setTaskData(
                     TaskData(
-                        name, className, cppPath, input, output, testType, listOf()
+                        name, className, cppPath, input, output, listOf()
                     )
                 )
             }
@@ -107,7 +101,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
                 settings.cppPath = data.cppPath
                 settings.input = data.input
                 settings.output = data.output
-                settings.testType = data.testType
                 settings.tests = data.tests.toList()
             }
 
@@ -129,7 +122,6 @@ class TaskConfiguration(project: Project, factory: ConfigurationFactory?) :
         cppPath = data.cppPath
         input = data.input
         output = data.output
-        testType = data.testType
         tests = data.tests
     }
 

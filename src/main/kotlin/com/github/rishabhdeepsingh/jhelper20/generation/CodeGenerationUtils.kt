@@ -8,7 +8,6 @@ import com.github.rishabhdeepsingh.jhelper20.exceptions.NotificationException
 import com.github.rishabhdeepsingh.jhelper20.generation.TemplatesUtils.getTemplate
 import com.github.rishabhdeepsingh.jhelper20.task.StreamType
 import com.github.rishabhdeepsingh.jhelper20.task.Test
-import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.intellij.codeInsight.actions.ReformatCodeProcessor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
@@ -41,7 +40,6 @@ object CodeGenerationUtils {
         getTemplate(project, "run").replaceAll(TemplatesUtils.TASK_FILE, path)
             .replaceAll(TemplatesUtils.TESTS, generateTestDeclaration(task.tests))
             .replaceAll(TemplatesUtils.CLASS_NAME, task.className)
-            .replaceAll(TemplatesUtils.SOLVER_CALL, generateSolverCall(task.testType))
 
     private fun generateTestDeclaration(tests: List<Test>): String = tests.joinToString { test ->
         """
@@ -69,22 +67,6 @@ object CodeGenerationUtils {
         return sb
     }
 
-    private fun generateSolverCall(testType: TestType): String = when (testType) {
-        TestType.SINGLE -> "solver.solve();"
-        TestType.MULTI_NUMBER -> """
-                int n;
-                cin >> n;
-                for (int i = 0; i < n; ++i) {
-                  solver.solve();
-                }
-                """.trimIndent()
-
-        TestType.MULTI_EOF -> """
-                while (cin.good())
-                  solver.solve(cin,cout);
-                }
-               """.trimIndent()
-    }
 
     private fun getRunFile(project: Project): PsiFile {
         val configuration = ProjectConfigurationState.getInstance()
@@ -133,7 +115,6 @@ object CodeGenerationUtils {
             .replaceAll(TemplatesUtils.CLASS_NAME, (task.className))
             .replaceAll(TemplatesUtils.INPUT, getInputDeclaration(task))
             .replaceAll(TemplatesUtils.OUTPUT, getOutputDeclaration(task))
-            .replaceAll(TemplatesUtils.SOLVER_CALL, generateSolverCall(task.testType))
     }
 
     private fun generateFileNameGetter(): String {
@@ -196,8 +177,7 @@ object CodeGenerationUtils {
         val outputFile =
             project.firstRootSource().findFileByRelativePath(ProjectConfigurationState.getInstance().outputFile)
                 ?: throw NotificationException(
-                    "No output file found.",
-                    "You should configure output file to point to existing file"
+                    "No output file found.", "You should configure output file to point to existing file"
                 )
         return PsiManager.getInstance(project).findFile(outputFile)
             ?: throw NotificationException("Couldn't open output file as PSI")
