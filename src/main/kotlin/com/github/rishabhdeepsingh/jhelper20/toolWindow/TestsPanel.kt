@@ -5,6 +5,8 @@ import com.github.rishabhdeepsingh.jhelper20.services.EditTestsService
 import com.github.rishabhdeepsingh.jhelper20.task.Test
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.openapi.editor.colors.EditorFontType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.util.text.StringUtil
@@ -35,10 +37,18 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         emptyText.text = "No tests"
         cellRenderer = TestWithCheckBoxRenderer()
     }
+    val editorFont = EditorColorsManager.getInstance().globalScheme.getFont(EditorFontType.PLAIN)
 
-    // Editors on the right
-    private val inputArea = JBTextArea().apply { lineWrap = true; wrapStyleWord = true }
-    private val outputArea = JBTextArea().apply { lineWrap = true; wrapStyleWord = true }
+    private val inputArea = JBTextArea().apply {
+        lineWrap = true
+        wrapStyleWord = true
+        font = editorFont
+    }
+    private val outputArea = JBTextArea().apply {
+        lineWrap = true
+        wrapStyleWord = true
+        font = editorFont
+    }
 
     private val debounce = Alarm(Alarm.ThreadToUse.SWING_THREAD, this)
     private var applyingFromModel = false

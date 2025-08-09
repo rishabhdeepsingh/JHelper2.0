@@ -25,6 +25,7 @@ import com.intellij.ui.content.ContentFactory
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JComponent
+import javax.swing.SwingUtilities.invokeLater
 
 class JHelperWindowFactory : ToolWindowFactory, DumbAware {
 
@@ -59,7 +60,7 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
                     AddTestAction {
                         val index = editTestsService.addTest("", "", true)
                         // Try to select the created test after the model updates
-                        javax.swing.SwingUtilities.invokeLater {
+                        invokeLater {
                             testsPanel.selectIndex(index)
                         }
                     },
