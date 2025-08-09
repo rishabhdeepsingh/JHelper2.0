@@ -55,6 +55,13 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
         fun getContent(): JComponent {
             val toolbar = ActionManager.getInstance().createActionToolbar(
                 "JHelper.Toolbar", DefaultActionGroup(
+                    AddTestAction {
+                        val index = editTestsService.addTest("", "", true)
+                        // Try to select the created test after the model updates
+                        javax.swing.SwingUtilities.invokeLater {
+                            testsPanel.selectIndex(index)
+                        }
+                    },
                     CopyAction { copySourceService.copySource() },
                     Separator.getInstance(),
                     ToggleAllTestsAction { editTestsService.toggleAll() },
@@ -86,6 +93,11 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
             // testsPanel is disposed via Disposer.register
         }
     }
+}
+
+private class AddTestAction(private val onAdd: () -> Unit) :
+    DumbAwareAction("Add Test", "Add new test case", AllIcons.General.Add) {
+    override fun actionPerformed(e: AnActionEvent) = onAdd()
 }
 
 private class CopyAction(private val onCopy: () -> Unit) :

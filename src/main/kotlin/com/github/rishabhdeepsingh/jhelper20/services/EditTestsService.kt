@@ -39,6 +39,16 @@ class EditTestsService(val project: Project) {
         notifyTestsChanged()
     }
 
+    // Add a new test (defaults to empty I/O and active)
+    fun addTest(input: String = "", output: String = "", active: Boolean = true): Int {
+        val newIndex = _tests.size
+        _tests.add(Test(input, output, newIndex, active))
+        persistIntoSelectedTaskConfiguration()
+        notifyTestsChanged()
+        return newIndex
+    }
+
+
     // Toggle active flag (called by UI)
     fun setActive(index: Int, active: Boolean) {
         if (index !in _tests.indices) return

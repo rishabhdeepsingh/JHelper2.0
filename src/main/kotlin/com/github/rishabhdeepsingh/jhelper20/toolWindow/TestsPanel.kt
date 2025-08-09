@@ -121,6 +121,17 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         editTestsService.setActive(index, !current.active)
     }
 
+    // Helper for actions to select a particular test in the list
+    fun selectIndex(index: Int) {
+        if (index !in 0 until listModel.size) {
+            return
+        }
+        list.selectedIndex = index
+        list.ensureIndexIsVisible(index)
+        loadSelectedIntoEditors()
+    }
+
+
     private fun loadSelectedIntoEditors() {
         val idx = list.selectedIndex
         applyingFromModel = true

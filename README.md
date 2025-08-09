@@ -13,7 +13,12 @@ Features:
 - [x] Copy sources to clipboard.
 - [x] Delete a Task.
 - [x] Configure tasks (i.e. update input and output)
-- [ ] Add or delete a Testcase.
+- [x] Add a Testcase.
+
+### Pending Features:
+
+- [ ] Delete a testcase (Right now you can marka a test case as inactive).
+- [ ] Archive a task.
 
 <!-- Plugin description end -->
 
@@ -32,6 +37,10 @@ Features:
 
 - [AlexeyDmitriev](https://github.com/AlexeyDmitriev) for JHelper
 - [EgorKulikov](https://github.com/EgorKulikov) For Idea-chelper
+
+## Feature requests?
+
+Just open an issue.
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
