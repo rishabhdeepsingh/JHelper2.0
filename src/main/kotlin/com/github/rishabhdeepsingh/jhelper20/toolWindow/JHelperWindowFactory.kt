@@ -32,10 +32,16 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val jHelperToolWindow = JHelperToolWindow(toolWindow)
 
-        val content = ContentFactory.getInstance().createContent(jHelperToolWindow.getContent(), "JHelper", false)
+        // Create a single, non-closeable content and ensure it's the only one present
+        val content = ContentFactory.getInstance().createContent(
+            jHelperToolWindow.getContent(), null, false
+        ).apply {
+            isCloseable = false
+            setDisposer(jHelperToolWindow) // Dispose inner resources with the content
+        }
 
-        // Dispose inner resources (TestsPanel) with the content
-        content.setDisposer(jHelperToolWindow)
+        toolWindow.stripeTitle = "JHelper2.0"
+        toolWindow.contentManager.removeAllContents(true)
         toolWindow.contentManager.addContent(content)
 
         // Seed initial tests so the list is populated immediately
