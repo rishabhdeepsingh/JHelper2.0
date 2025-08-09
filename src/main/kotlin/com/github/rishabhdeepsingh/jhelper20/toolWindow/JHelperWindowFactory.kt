@@ -16,6 +16,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBPanel
@@ -62,6 +63,8 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
                             testsPanel.selectIndex(index)
                         }
                     },
+                    DeleteSelectedTestAction { testsPanel.deleteSelectedTest() },
+                    Separator.getInstance(),
                     CopyAction { copySourceService.copySource() },
                     Separator.getInstance(),
                     ToggleAllTestsAction { editTestsService.toggleAll() },
@@ -96,7 +99,7 @@ class JHelperWindowFactory : ToolWindowFactory, DumbAware {
 }
 
 private class AddTestAction(private val onAdd: () -> Unit) :
-    DumbAwareAction("Add Test", "Add new test case", AllIcons.General.Add) {
+    DumbAwareAction("Add Testcase", "Add new test case", AllIcons.General.Add) {
     override fun actionPerformed(e: AnActionEvent) = onAdd()
 }
 
@@ -105,8 +108,15 @@ private class CopyAction(private val onCopy: () -> Unit) :
     override fun actionPerformed(e: AnActionEvent) = onCopy()
 }
 
+private class DeleteSelectedTestAction(private val onDeleteSelected: () -> Unit) :
+    DumbAwareAction("Delete Testcase", "Delete selected test case", AllIcons.General.Remove) {
+    override fun actionPerformed(e: AnActionEvent) = onDeleteSelected()
+}
+
+private val DELETE_TASK_ICON = IconLoader.getIcon("/icons/delete.png", JHelperWindowFactory::class.java)
+
 private class DeleteAction(private val onDelete: () -> Unit) :
-    DumbAwareAction("Delete Task", "Delete task", AllIcons.General.Remove) {
+    DumbAwareAction("Delete Task", "Delete task", DELETE_TASK_ICON) {
     override fun actionPerformed(e: AnActionEvent) = onDelete()
 }
 

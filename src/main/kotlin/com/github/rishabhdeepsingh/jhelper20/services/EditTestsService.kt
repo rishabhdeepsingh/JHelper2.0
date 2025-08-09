@@ -58,7 +58,21 @@ class EditTestsService(val project: Project) {
         notifyTestsChanged()
     }
 
-    // New: mark all tests active/inactive in one go
+    fun deleteAt(index: Int) {
+        if (index !in _tests.indices) return
+        _tests.removeAt(index)
+        // Reindex to keep indices sequential
+        for (i in _tests.indices) {
+            val t = _tests[i]
+            if (t.index != i) {
+                _tests[i] = Test(t.input, t.output, i, t.active)
+            }
+        }
+        persistIntoSelectedTaskConfiguration()
+        notifyTestsChanged()
+    }
+
+
     fun toggleAll() {
         val allActive = _tests.all { it.active }
         val active = !allActive

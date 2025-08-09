@@ -131,6 +131,13 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         loadSelectedIntoEditors()
     }
 
+    fun deleteSelectedTest() {
+        val idx = list.selectedIndex
+        if (idx >= 0) {
+            editTestsService.deleteAt(idx)
+        }
+    }
+
 
     private fun loadSelectedIntoEditors() {
         val idx = list.selectedIndex
