@@ -25,7 +25,6 @@ repositories {
 
     dependencies {
         implementation("org.jsoup:jsoup:1.21.1")
-//        implementation("com.jetbrains.intellij.cidr:cidr-lang-base:251.27812.49")
     }
 
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
