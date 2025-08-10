@@ -5,11 +5,14 @@ import com.github.rishabhdeepsingh.jhelper20.services.EditTestsService
 import com.github.rishabhdeepsingh.jhelper20.task.Test
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.openapi.editor.colors.EditorFontType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.OnePixelSplitter
+import com.intellij.ui.SimpleColoredComponent
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
@@ -34,10 +37,18 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         emptyText.text = "No tests"
         cellRenderer = TestWithCheckBoxRenderer()
     }
+    val editorFont = EditorColorsManager.getInstance().globalScheme.getFont(EditorFontType.PLAIN)
 
-    // Editors on the right
-    private val inputArea = JBTextArea().apply { lineWrap = true; wrapStyleWord = true }
-    private val outputArea = JBTextArea().apply { lineWrap = true; wrapStyleWord = true }
+    private val inputArea = JBTextArea().apply {
+        lineWrap = true
+        wrapStyleWord = true
+        font = editorFont
+    }
+    private val outputArea = JBTextArea().apply {
+        lineWrap = true
+        wrapStyleWord = true
+        font = editorFont
+    }
 
     private val debounce = Alarm(Alarm.ThreadToUse.SWING_THREAD, this)
     private var applyingFromModel = false
@@ -69,7 +80,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
             }
         })
 
-        // Change cursor to hand when hovering over checkbox area
+        // Change the cursor to hand when hovering over the checkbox area
         list.addMouseMotionListener(object : MouseMotionAdapter() {
             override fun mouseMoved(e: MouseEvent) {
                 val index = list.locationToIndex(e.point)
@@ -83,7 +94,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
             if (!it.valueIsAdjusting) loadSelectedIntoEditors()
         }
 
-        // Editors -> auto-save with debounce
+        // Editors -> auto-save with debouncing
         val docListener = object : DocumentListener {
             override fun insertUpdate(e: DocumentEvent) = scheduleCommit()
             override fun removeUpdate(e: DocumentEvent) = scheduleCommit()
@@ -131,6 +142,13 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
         loadSelectedIntoEditors()
     }
 
+    fun deleteSelectedTest() {
+        val idx = list.selectedIndex
+        if (idx >= 0) {
+            editTestsService.deleteAt(idx)
+        }
+    }
+
 
     private fun loadSelectedIntoEditors() {
         val idx = list.selectedIndex
@@ -155,7 +173,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
 
         // Optimistically update the visible row so preview updates immediately
         val current = listModel.getElementAt(idx)
-        val updated = Test(newInput, newOutput, current.index, current.active)
+        val updated = Test(newInput, newOutput, current.active)
         listModel.setElementAt(updated, idx)
         list.repaint()
 
@@ -182,7 +200,7 @@ class TestsPanel(project: Project) : JPanel(BorderLayout()), Disposable {
     private class TestWithCheckBoxRenderer : ListCellRenderer<Test> {
         private val panel = JPanel(BorderLayout())
         private val checkBox = JCheckBox()
-        private val text = com.intellij.ui.SimpleColoredComponent()
+        private val text = SimpleColoredComponent()
 
         init {
             panel.border = BorderFactory.createEmptyBorder(2, 4, 2, 4) // 4px left inset

@@ -8,7 +8,6 @@ import com.github.rishabhdeepsingh.jhelper20.parser.CompetitiveCompanion
 import com.github.rishabhdeepsingh.jhelper20.task.StreamConfiguration
 import com.github.rishabhdeepsingh.jhelper20.task.TaskData
 import com.github.rishabhdeepsingh.jhelper20.task.TaskUtils
-import com.github.rishabhdeepsingh.jhelper20.task.TestType
 import com.github.rishabhdeepsingh.jhelper20.ui.Utils
 import com.intellij.openapi.components.Service
 import java.net.InetSocketAddress
@@ -36,7 +35,6 @@ class ChromeParserService {
                     cppPath = TaskData.defaultCppPathFormat().format(task.name.toClassName()),
                     StreamConfiguration.STANDARD,
                     StreamConfiguration.STANDARD,
-                    TestType.SINGLE,
                     task.tests
                 ), currentProject()
             )

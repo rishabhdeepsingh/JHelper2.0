@@ -34,7 +34,7 @@ class EditTestsService(val project: Project) {
     fun updateTestIO(index: Int, newInput: String, newOutput: String) {
         if (index !in _tests.indices) return
         val t = _tests[index]
-        _tests[index] = Test(newInput, newOutput, t.index, t.active)
+        _tests[index] = Test(newInput, newOutput, t.active)
         persistIntoSelectedTaskConfiguration()
         notifyTestsChanged()
     }
@@ -42,7 +42,7 @@ class EditTestsService(val project: Project) {
     // Add a new test (defaults to empty I/O and active)
     fun addTest(input: String = "", output: String = "", active: Boolean = true): Int {
         val newIndex = _tests.size
-        _tests.add(Test(input, output, newIndex, active))
+        _tests.add(Test(input, output, active))
         persistIntoSelectedTaskConfiguration()
         notifyTestsChanged()
         return newIndex
@@ -53,12 +53,19 @@ class EditTestsService(val project: Project) {
     fun setActive(index: Int, active: Boolean) {
         if (index !in _tests.indices) return
         val t = _tests[index]
-        _tests[index] = Test(t.input, t.output, t.index, active)
+        _tests[index] = Test(t.input, t.output, active)
         persistIntoSelectedTaskConfiguration()
         notifyTestsChanged()
     }
 
-    // New: mark all tests active/inactive in one go
+    fun deleteAt(index: Int) {
+        if (index !in _tests.indices) return
+        _tests.removeAt(index)
+        persistIntoSelectedTaskConfiguration()
+        notifyTestsChanged()
+    }
+
+
     fun toggleAll() {
         val allActive = _tests.all { it.active }
         val active = !allActive
@@ -77,7 +84,7 @@ class EditTestsService(val project: Project) {
         val cfg = settings.configuration as? TaskConfiguration ?: return
 
         // Copy values to avoid accidental external mutation
-        cfg.tests = _tests.map { Test(it.input, it.output, it.index, it.active) }
+        cfg.tests = _tests.map { Test(it.input, it.output, it.active) }
 
         // Ask the IDE to save the project (persists workspace.xml with run configurations)
         SaveAndSyncHandler.getInstance().scheduleProjectSave(project)

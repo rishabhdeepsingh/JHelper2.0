@@ -8,7 +8,6 @@ data class TaskData(
     val cppPath: String,
     val input: StreamConfiguration,
     val output: StreamConfiguration,
-    val testType: TestType,
     val tests: List<Test>,
 ) {
 
@@ -18,7 +17,7 @@ data class TaskData(
             "", String.format(defaultCppPathFormat(), ""),
             StreamConfiguration.STANDARD,
             StreamConfiguration.STANDARD,
-            TestType.SINGLE, listOf()
+            listOf()
         )
 
         fun defaultCppPathFormat() = "${ProjectConfigurationState.getInstance().state.tasksDirectory}/%s.cpp"

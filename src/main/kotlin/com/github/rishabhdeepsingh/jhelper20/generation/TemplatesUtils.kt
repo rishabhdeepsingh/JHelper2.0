@@ -28,11 +28,9 @@ object TemplatesUtils {
     val CLASS_NAME: Pattern = Pattern.compile("%ClassName%", Pattern.LITERAL)
     val TASK_FILE: Pattern = Pattern.compile("%TaskFile%", Pattern.LITERAL)
     val TESTS: Pattern = Pattern.compile("%Tests%", Pattern.LITERAL)
-    val SOLVER_CALL: Pattern = Pattern.compile("%SolverCall%", Pattern.LITERAL)
     val INPUT: Pattern = Pattern.compile("%Input%", Pattern.LITERAL)
     val OUTPUT: Pattern = Pattern.compile("%Output%", Pattern.LITERAL)
     val CODE: Pattern = Pattern.compile("%Code%", Pattern.LITERAL)
-
 
     fun getTemplate(project: Project, name: String): String {
         val filename = "$name.template"

@@ -12,7 +12,8 @@
         <configurationType implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskConfigurationType"/>
         <programRunner implementation="com.github.rishabhdeepsingh.jhelper20.configuration.TaskRunner"/>
         <toolWindow factoryClass="com.github.rishabhdeepsingh.jhelper20.toolWindow.JHelperWindowFactory"
-                    id="JHelperToolWindow"/>
+                    id="JHelperToolWindow"
+                    icon="com.github.rishabhdeepsingh.jhelper20.ui.Icons.JHelperIcon"/>
         <applicationService
                 serviceImplementation="com.github.rishabhdeepsingh.jhelper20.states.ProjectConfigurationState"/>
         <backgroundPostStartupActivity

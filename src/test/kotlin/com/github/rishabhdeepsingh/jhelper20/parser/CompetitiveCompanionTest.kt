@@ -30,7 +30,7 @@ class CompetitiveCompanionTest {
                     """.trimIndent(), output = """
                         3
                         6
-                    """.trimIndent(), index = 0, active = true
+                    """.trimIndent(), active = true
                     )
                 )
             )
