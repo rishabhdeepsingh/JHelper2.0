@@ -18,7 +18,7 @@ import com.intellij.psi.PsiManager
 
 object TaskUtils {
 
-    fun saveNewTask(taskData: TaskData, project: Project): VirtualFile {
+    fun saveNewTask(taskData: TaskData, project: Project): VirtualFile? {
         createConfigurationForTask(project, taskData)
         return generateCPP(project, taskData)
     }
@@ -36,7 +36,7 @@ object TaskUtils {
         manager.selectedConfiguration = configuration
     }
 
-    private fun generateCPP(project: Project, taskData: TaskData): VirtualFile {
+    private fun generateCPP(project: Project, taskData: TaskData): VirtualFile? {
         val parent = FileUtils.findOrCreateByRelativePath(
             project.firstRootSource(), FileUtils.getDirectory(taskData.cppPath)
         )
@@ -51,7 +51,7 @@ object TaskUtils {
         )
         file.let { ApplicationManager.getApplication().runWriteAction(Computable { psiParent.add(it) }) }
             ?: throw NotificationException("Couldn't generate file")
-        return file.viewProvider.virtualFile
+        return parent.findChild(file.name)
     }
 
     /**

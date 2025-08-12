@@ -8,7 +8,10 @@ object Utils {
     /**
      * Finds method @{code methodName} in @{code file} and opens it in an editor.
      */
-    fun openMethodInEditor(project: Project, file: VirtualFile) {
-        FileEditorManager.getInstance(project).openFile(file, true)
+    fun openMethodInEditor(project: Project, file: VirtualFile?) {
+        if (file == null) {
+            return
+        }
+        FileEditorManager.getInstance(project).openFile(file)
     }
 }
