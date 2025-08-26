@@ -24,7 +24,7 @@ repositories {
     mavenCentral()
 
     dependencies {
-        implementation("org.jsoup:jsoup:1.21.1")
+        implementation("org.jsoup:jsoup:1.21.2")
     }
 
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
